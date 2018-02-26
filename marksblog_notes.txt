@@ -1,0 +1,285 @@
+aws emr create-cluster \
+    --name 'ORC & Parquet cluster' \
+    --region us-east-1 \
+    --release-label emr-5.2.0 \
+    --applications \
+        Name=Hadoop \
+        Name=Hive \
+        Name=Spark \
+    --instance-groups '[{
+        "InstanceCount":2,
+        "BidPrice":"0.13",
+        "InstanceGroupType":"CORE",
+        "InstanceType":"r4.2xlarge",
+        "Name":"Core - 2"
+    },{
+        "InstanceCount":2,
+        "BidPrice":"0.08",
+        "InstanceGroupType":"TASK",
+        "InstanceType":"r4.xlarge",
+        "Name":"Task - 3"
+    },{
+        "InstanceCount":1,
+        "InstanceGroupType":"MASTER",
+        "InstanceType":"r4.2xlarge",
+        "Name":"Master - 1"
+    }]' \
+    --ec2-attributes '{
+        "KeyName":"liangcheng-comcast-proto-east1",
+        "InstanceProfile":"EMR_EC2_DefaultRole",
+        "SubnetId":"subnet-e1916eee",
+        "EmrManagedSlaveSecurityGroup":"sg-747bcd03",
+        "EmrManagedMasterSecurityGroup":"sg-c462d4b3"
+    }' \
+    --auto-scaling-role EMR_AutoScaling_DefaultRole \
+    --service-role EMR_DefaultRole \
+    --termination-protected \
+    --enable-debugging \
+    --scale-down-behavior TERMINATE_AT_INSTANCE_HOUR \
+    --log-uri 's3n://aws-logs-931047198824-us-east-1/elasticmapreduce/'
+
+
+CREATE EXTERNAL TABLE trips_csv (
+    trip_id                 INT,
+    vendor_id               VARCHAR(3),
+    pickup_datetime         TIMESTAMP,
+    dropoff_datetime        TIMESTAMP,
+    store_and_fwd_flag      VARCHAR(1),
+    rate_code_id            SMALLINT,
+    pickup_longitude        DECIMAL(18,14),
+    pickup_latitude         DECIMAL(18,14),
+    dropoff_longitude       DECIMAL(18,14),
+    dropoff_latitude        DECIMAL(18,14),
+    passenger_count         SMALLINT,
+    trip_distance           DECIMAL(6,3),
+    fare_amount             DECIMAL(6,2),
+    extra                   DECIMAL(6,2),
+    mta_tax                 DECIMAL(6,2),
+    tip_amount              DECIMAL(6,2),
+    tolls_amount            DECIMAL(6,2),
+    ehail_fee               DECIMAL(6,2),
+    improvement_surcharge   DECIMAL(6,2),
+    total_amount            DECIMAL(6,2),
+    payment_type            VARCHAR(3),
+    trip_type               SMALLINT,
+    pickup                  VARCHAR(50),
+    dropoff                 VARCHAR(50),
+
+    cab_type                VARCHAR(6),
+
+    precipitation           SMALLINT,
+    snow_depth              SMALLINT,
+    snowfall                SMALLINT,
+    max_temperature         SMALLINT,
+    min_temperature         SMALLINT,
+    average_wind_speed      SMALLINT,
+
+    pickup_nyct2010_gid     SMALLINT,
+    pickup_ctlabel          VARCHAR(10),
+    pickup_borocode         SMALLINT,
+    pickup_boroname         VARCHAR(13),
+    pickup_ct2010           VARCHAR(6),
+    pickup_boroct2010       VARCHAR(7),
+    pickup_cdeligibil       VARCHAR(1),
+    pickup_ntacode          VARCHAR(4),
+    pickup_ntaname          VARCHAR(56),
+    pickup_puma             VARCHAR(4),
+
+    dropoff_nyct2010_gid    SMALLINT,
+    dropoff_ctlabel         VARCHAR(10),
+    dropoff_borocode        SMALLINT,
+    dropoff_boroname        VARCHAR(13),
+    dropoff_ct2010          VARCHAR(6),
+    dropoff_boroct2010      VARCHAR(7),
+    dropoff_cdeligibil      VARCHAR(1),
+    dropoff_ntacode         VARCHAR(4),
+    dropoff_ntaname         VARCHAR(56),
+    dropoff_puma            VARCHAR(4)
+) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+  LOCATION 's3://additional-test-datasets/nyc_taxi_and_uber_data_segmented_csv/'
+
+CREATE EXTERNAL TABLE trips_orc (
+    trip_id                 INT,
+    vendor_id               STRING,
+    pickup_datetime         TIMESTAMP,
+    dropoff_datetime        TIMESTAMP,
+    store_and_fwd_flag      STRING,
+    rate_code_id            SMALLINT,
+    pickup_longitude        DOUBLE,
+    pickup_latitude         DOUBLE,
+    dropoff_longitude       DOUBLE,
+    dropoff_latitude        DOUBLE,
+    passenger_count         SMALLINT,
+    trip_distance           DOUBLE,
+    fare_amount             DOUBLE,
+    extra                   DOUBLE,
+    mta_tax                 DOUBLE,
+    tip_amount              DOUBLE,
+    tolls_amount            DOUBLE,
+    ehail_fee               DOUBLE,
+    improvement_surcharge   DOUBLE,
+    total_amount            DOUBLE,
+    payment_type            STRING,
+    trip_type               SMALLINT,
+    pickup                  STRING,
+    dropoff                 STRING,
+
+    cab_type                STRING,
+
+    precipitation           SMALLINT,
+    snow_depth              SMALLINT,
+    snowfall                SMALLINT,
+    max_temperature         SMALLINT,
+    min_temperature         SMALLINT,
+    average_wind_speed      SMALLINT,
+
+    pickup_nyct2010_gid     SMALLINT,
+    pickup_ctlabel          STRING,
+    pickup_borocode         SMALLINT,
+    pickup_boroname         STRING,
+    pickup_ct2010           STRING,
+    pickup_boroct2010       STRING,
+    pickup_cdeligibil       STRING,
+    pickup_ntacode          STRING,
+    pickup_ntaname          STRING,
+    pickup_puma             STRING,
+
+    dropoff_nyct2010_gid    SMALLINT,
+    dropoff_ctlabel         STRING,
+    dropoff_borocode        SMALLINT,
+    dropoff_boroname        STRING,
+    dropoff_ct2010          STRING,
+    dropoff_boroct2010      STRING,
+    dropoff_cdeligibil      STRING,
+    dropoff_ntacode         STRING,
+    dropoff_ntaname         STRING,
+    dropoff_puma            STRING
+) STORED AS orc
+  LOCATION 's3://additional-test-datasets/nyc_taxi_and_uber_data_orc/';
+
+CREATE EXTERNAL TABLE trips_parquet (
+    trip_id                 INT,
+    vendor_id               STRING,
+    pickup_datetime         TIMESTAMP,
+    dropoff_datetime        TIMESTAMP,
+    store_and_fwd_flag      STRING,
+    rate_code_id            SMALLINT,
+    pickup_longitude        DOUBLE,
+    pickup_latitude         DOUBLE,
+    dropoff_longitude       DOUBLE,
+    dropoff_latitude        DOUBLE,
+    passenger_count         SMALLINT,
+    trip_distance           DOUBLE,
+    fare_amount             DOUBLE,
+    extra                   DOUBLE,
+    mta_tax                 DOUBLE,
+    tip_amount              DOUBLE,
+    tolls_amount            DOUBLE,
+    ehail_fee               DOUBLE,
+    improvement_surcharge   DOUBLE,
+    total_amount            DOUBLE,
+    payment_type            STRING,
+    trip_type               SMALLINT,
+    pickup                  STRING,
+    dropoff                 STRING,
+
+    cab_type                STRING,
+
+    precipitation           SMALLINT,
+    snow_depth              SMALLINT,
+    snowfall                SMALLINT,
+    max_temperature         SMALLINT,
+    min_temperature         SMALLINT,
+    average_wind_speed      SMALLINT,
+
+    pickup_nyct2010_gid     SMALLINT,
+    pickup_ctlabel          STRING,
+    pickup_borocode         SMALLINT,
+    pickup_boroname         STRING,
+    pickup_ct2010           STRING,
+    pickup_boroct2010       STRING,
+    pickup_cdeligibil       STRING,
+    pickup_ntacode          STRING,
+    pickup_ntaname          STRING,
+    pickup_puma             STRING,
+
+    dropoff_nyct2010_gid    SMALLINT,
+    dropoff_ctlabel         STRING,
+    dropoff_borocode        SMALLINT,
+    dropoff_boroname        STRING,
+    dropoff_ct2010          STRING,
+    dropoff_boroct2010      STRING,
+    dropoff_cdeligibil      STRING,
+    dropoff_ntacode         STRING,
+    dropoff_ntaname         STRING,
+    dropoff_puma            STRING
+) STORED AS parquet
+  LOCATION 's3://additional-test-datasets/nyc_taxi_and_uber_data_parquet/';
+
+
+#following is redshift creation notes:
+create external schema nyc_taix_and_uber_parquet 
+from data trips_parquetnyc_taxi_and_uber_data_parquet
+database 'nycitytaxi' 
+iam_role 'arn:aws:iam::931047198824:role/myRedshiftSpectrumRole'
+create external database if not exists;
+
+
+CREATE EXTERNAL TABLE nyc_taxi_and_uber_parquet.trips_parquet (
+    trip_id                 INT,
+    vendor_id               VARCHAR(256),
+    pickup_datetime         TIMESTAMP,
+    dropoff_datetime        TIMESTAMP,
+    store_and_fwd_flag      VARCHAR(256),
+    rate_code_id            SMALLINT,
+    pickup_longitude        DOUBLE PRECISION,
+    pickup_latitude         DOUBLE PRECISION,
+    dropoff_longitude       DOUBLE PRECISION,
+    dropoff_latitude        DOUBLE PRECISION,
+    passenger_count         SMALLINT,
+    trip_distance           DOUBLE PRECISION,
+    fare_amount             DOUBLE PRECISION,
+    extra                   DOUBLE PRECISION,
+    mta_tax                 DOUBLE PRECISION,
+    tip_amount              DOUBLE PRECISION,
+    tolls_amount            DOUBLE PRECISION,
+    ehail_fee               DOUBLE PRECISION,
+    improvement_surcharge   DOUBLE PRECISION,
+    total_amount            DOUBLE PRECISION,
+    payment_type            VARCHAR(256),
+    trip_type               SMALLINT,
+    pickup                  VARCHAR(256),
+    dropoff                 VARCHAR(256),
+
+    cab_type                VARCHAR(256),
+
+    precipitation           SMALLINT,
+    snow_depth              SMALLINT,
+    snowfall                SMALLINT,
+    max_temperature         SMALLINT,
+    min_temperature         SMALLINT,
+    average_wind_speed      SMALLINT,
+
+    pickup_nyct2010_gid     SMALLINT,
+    pickup_ctlabel          VARCHAR(256),
+    pickup_borocode         SMALLINT,
+    pickup_boroname         VARCHAR(256),
+    pickup_ct2010           VARCHAR(256),
+    pickup_boroct2010       VARCHAR(256),
+    pickup_cdeligibil       VARCHAR(256),
+    pickup_ntacode          VARCHAR(256),
+    pickup_ntaname          VARCHAR(256),
+    pickup_puma             VARCHAR(256),
+
+    dropoff_nyct2010_gid    SMALLINT,
+    dropoff_ctlabel         VARCHAR(256),
+    dropoff_borocode        SMALLINT,
+    dropoff_boroname        VARCHAR(256),
+    dropoff_ct2010          VARCHAR(256),
+    dropoff_boroct2010      VARCHAR(256),
+    dropoff_cdeligibil      VARCHAR(256),
+    dropoff_ntacode         VARCHAR(256),
+    dropoff_ntaname         VARCHAR(256),
+    dropoff_puma            VARCHAR(256)
+) STORED AS parquet
+  LOCATION 's3://additional-test-datasets/nyc_taxi_and_uber_data_parquet/';
