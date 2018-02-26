@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export PGHOST=mynyctaxidb.cxshmucrqlb5.us-east-1.rds.amazonaws.com
+export PGHOST=nytaxidata.chj5mh8idc4d.us-east-1.rds.amazonaws.com
 export PGPORT=5432
-export PGDATABASE=nyc-taxi-data
-export PGUSER=mynyctaxidb
-export PGPASSWORD=mynyctaxidb
+export PGDATABASE=nyctaxidata
+export PGUSER=nyctaxidata
+export PGPASSWORD=nyctaxidata
 

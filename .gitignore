@@ -2,3 +2,5 @@
 .DS_Store
 ggmapTemp.png
 .idea
+PG_Connection_Parameters.sh
+data/*
