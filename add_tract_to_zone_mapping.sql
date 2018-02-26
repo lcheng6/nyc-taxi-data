@@ -1,3 +1,5 @@
+-- this builds a table of intersection of nyct (ESRI shape) to taxi zone
+--
 CREATE TABLE nyct2010_taxi_zones_mapping AS
 SELECT
   ct.gid AS nyct2010_gid,

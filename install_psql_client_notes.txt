@@ -1,0 +1,9 @@
+##### install psql client on mac   #####
+
+# to get the psql client - have to install the whole database software
+# but the PG_Connection parameter will make sure not to use the local database
+brew install postgres
+# installs the gis extension to postgres
+brew install postgis
+
+##### install PostGIS against RDS Postgres ####
