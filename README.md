@@ -80,6 +80,53 @@ There's a Ruby script in the `tlc_statistics/` folder to import data from the TL
 
 Code in support of the post ["When Are Citi Bikes Faster Than Taxis in New York City?"](http://toddwschneider.com/posts/taxi-vs-citi-bike-nyc/) lives in the `citibike_comparison/` folder
 
+## Infrastructure Setup for Performing Analysis on AWS
+
+### Hardware Requirement
+
+1. AWS RDS Postgres Database.  The following instruction set was tested with RDS Postgres 10.4 
+2. AWS EC2.  The instructions were tested with Ubuntu LTS 16.04.  It may be possible to perform data loading with Amazon Linux or Amazon Linux, but the program and set up process so difficult I gave up on Amazon Linux
+
+### RDS Configuration
+Taken from the AWS's documentation [Common DBA Tasks for PostgresSQL](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.PostgreSQL.CommonDBATasks.html#Appendix.PostgreSQL.CommonDBATasks.PostGIS) Section Working with PostGIS
+Log into the RDS database with psql client.  Issue the following commands: 
+```
+
+--- enable the extensions 
+create extension postgis;
+create extension fuzzystrmatch;
+create extension postgis_tiger_geocoder;
+create extension postgis_topology;
+
+--- verify tiger data are enabled. 
+\dn
+
+--- alter schema to transfer ownership of the schemas to the rds_superuser role.
+
+alter schema tiger owner to rds_superuser;
+alter schema tiger_data owner to rds_superuser;
+alter schema topology owner to rds_superuser;
+
+--- verify schema ownership are transfered
+\dn
+
+
+CREATE FUNCTION exec(text) returns text language plpgsql volatile AS $f$ BEGIN EXECUTE $1; RETURN $1; END; $f$;      
+
+SELECT exec('ALTER TABLE ' || quote_ident(s.nspname) || '.' || quote_ident(s.relname) || ' OWNER TO rds_superuser;')
+  FROM (
+    SELECT nspname, relname
+    FROM pg_class c JOIN pg_namespace n ON (c.relnamespace = n.oid) 
+    WHERE nspname in ('tiger','topology') AND
+    relkind IN ('r','S','v') ORDER BY relkind = 'S')
+s; 
+
+SET search_path=public,tiger; 
+
+
+```
+
+
 ## Questions/issues/contact
 
-todd@toddwschneider.com, or open a GitHub issue
+liangcheng6@gmail.com 
