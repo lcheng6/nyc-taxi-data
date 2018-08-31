@@ -47,12 +47,12 @@ for filename in data/green*.csv; do
   sed $'s/\r$//' $filename | sed '/^$/d' | psql nyc-taxi-data -c "COPY green_tripdata_staging ${schema} FROM stdin CSV HEADER;"
   echo "`date`: finished raw load for ${filename}"
   psql nyc-taxi-data -f populate_green_trips_part1.sql
-  read -n 1 -p "Press Key to continue loading green:" mainmenuinput
+  #read -n 1 -p "Press Key to continue loading green:" mainmenuinput
   psql nyc-taxi-data -f populate_green_trips_part2.sql
   echo "`date`: loaded trips for ${filename}"
 done;
 
-read -n 1 -p "Start to load yellow:" mainmenuinput
+#read -n 1 -p "Start to load yellow:" mainmenuinput
 for filename in data/yellow*.csv; do
   [[ $filename =~ $year_month_regex ]]
   year=${BASH_REMATCH[1]}
