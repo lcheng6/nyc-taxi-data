@@ -5,4 +5,3 @@ export PGPORT=5432
 export PGDATABASE=nytaxidata
 export PGUSER=nytaxidata
 export PGPASSWORD=nytaxidata
-
