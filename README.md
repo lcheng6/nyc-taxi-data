@@ -126,6 +126,33 @@ SET search_path=public,tiger;
 
 ```
 
+### Ubuntu EC2 Configuration
+The version of Ubuntu should be LTS 16.04.  Other versions have not been very cooperative
+[Source Instructions](http://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS24UbuntuPGSQL10Apt)
+Relevant installation instructions
+```
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt xenial-pgdg main" >> /etc/apt/sources.list'
+wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | sudo apt-key add -
+sudo apt update
+
+
+#excute these instructions one line at a time
+sudo apt -y install postgresql-10
+sudo apt -y install postgresql-10-postgis-2.4 
+sudo apt -y install postgresql-10-postgis-scripts
+
+#to get the commandline tools shp2pgsql, raster2pgsql you need to do this
+sudo apt -y install postgis
+
+# Install pgRouting 2.6 package 
+sudo apt install postgresql-10-pgrouting
+
+# to connect to the RDS Postgres Endpoint
+
+psql -H <rds endpoint> -u <rds user> -d postgres
+
+```
+
 
 ## Questions/issues/contact
 
