@@ -11,6 +11,7 @@ The [yellow and green taxi data](http://www.nyc.gov/html/tlc/html/about/trip_rec
 Your mileage may vary, but on my MacBook Air, this process took about 3 days to complete. The unindexed database takes up 330 GB on disk. Adding indexes for improved query performance increases total disk usage by another 100 GB.
 
 ##### 1. Install [PostgreSQL](http://www.postgresql.org/download/) and [PostGIS](http://postgis.net/install)
+Enable PostGIS on AWS RDS Postgres [Guide](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.PostgreSQL.CommonDBATasks.html#Appendix.PostgreSQL.CommonDBATasks.PostGIS)
 
 Both are available via [Homebrew](http://brew.sh/) on Mac OS X
 
