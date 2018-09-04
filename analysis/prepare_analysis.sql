@@ -23,9 +23,9 @@ indexing helps query performance, but each index on the trips table takes up an 
 if you have disk space available, uncomment these CREATE INDEX lines
 */
 
--- CREATE INDEX index_trips_on_cab_type ON trips (cab_type_id);
--- CREATE INDEX index_trips_on_pickup_gid ON trips (pickup_nyct2010_gid);
--- CREATE INDEX index_trips_on_dropoff_gid ON trips (dropoff_nyct2010_gid);
+CREATE INDEX index_trips_on_cab_type ON trips (cab_type_id);
+CREATE INDEX index_trips_on_pickup_gid ON trips (pickup_nyct2010_gid);
+CREATE INDEX index_trips_on_dropoff_gid ON trips (dropoff_nyct2010_gid);
 
 CREATE TABLE hourly_pickups AS
 SELECT

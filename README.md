@@ -154,6 +154,14 @@ psql -H <rds endpoint> -u <rds user> -d postgres
 ```
 
 
+### Enable Ubuntu EC2 LTS 16.04 Xenial and GNOME UI 
+
+Setting up the Ubuntu VNC & Desktop 
+https://stackoverflow.com/questions/25657596/how-to-set-up-gui-on-amazon-ec2-ubuntu-server
+
+Follow the 2 answers by sugunan + ychien
+
+
 ## Questions/issues/contact
 
 liangcheng6@gmail.com 

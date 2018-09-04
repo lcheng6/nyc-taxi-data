@@ -66,3 +66,7 @@ TRUNCATE TABLE yellow_tripdata_staging;
 DROP TABLE tmp_points;
 DROP TABLE tmp_pickups;
 DROP TABLE tmp_dropoffs;
+
+--ST_SetSRID -- Set the SRID on a geometry to a particular integer value
+--Additional reference on WGS 4326: http://spatialreference.org/ref/epsg/4326/
+

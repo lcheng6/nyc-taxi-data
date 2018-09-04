@@ -16,6 +16,8 @@ source("helpers.R")
 
 # import spatial data for census tracts and neighborhoods
 tracts = spTransform(readOGR("../nyct2010_15b", layer = "nyct2010"), CRS("+proj=longlat +datum=WGS84"))
+#https://www.rdocumentation.org/packages/rgdal/versions/1.3-4/topics/spTransform-methods
+# converting datum(s) and converion between projects
 tracts@data$id = as.character(as.numeric(rownames(tracts@data)) + 1)
 tracts.points = fortify(tracts, region = "id")
 tracts.map = inner_join(tracts.points, tracts@data, by = "id")
