@@ -89,7 +89,7 @@ Code in support of the post ["When Are Citi Bikes Faster Than Taxis in New York 
 
 ### RDS Configuration
 Taken from the AWS's documentation [Common DBA Tasks for PostgresSQL](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.PostgreSQL.CommonDBATasks.html#Appendix.PostgreSQL.CommonDBATasks.PostGIS) Section Working with PostGIS
-Log into the RDS database with psql client.  Issue the following commands: 
+Log into the RDS database with psql client.  Issue the following commands against the RDS Postgres: 
 ```
 
 --- enable the extensions 
@@ -156,6 +156,7 @@ psql -H <rds endpoint> -u <rds user> -d postgres
 
 ### Enable Ubuntu EC2 LTS 16.04 Xenial and GNOME UI 
 
+Some data exploration tools, or GUI based SQL tools require a XServer or VNC Server based display.  Refer to this section if you are interested in using RStudio, Graphical Shapefile explorer.  Display R generated JPG etc, etc. 
 Setting up the Ubuntu VNC & Desktop 
 https://stackoverflow.com/questions/25657596/how-to-set-up-gui-on-amazon-ec2-ubuntu-server
 
