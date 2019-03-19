@@ -160,8 +160,51 @@ Some data exploration tools, or GUI based SQL tools require a XServer or VNC Ser
 Setting up the Ubuntu VNC & Desktop 
 https://stackoverflow.com/questions/25657596/how-to-set-up-gui-on-amazon-ec2-ubuntu-server
 
-Follow the 2 answers by sugunan + ychien
+Follow the 2 answers by sugunan + yuchien
 
+##### Abstract from the sugunan + yuchien's answers: 
+```
+#Add a new user named awsgui
+sudo useradd -m awsgui
+sudo passwd awsgui
+sudo usermod -aG admin awsgui
+
+#modify sshd_config
+sudo vim /etc/ssh/sshd_config # edit line "PasswordAuthentication" to yes
+sudo /etc/init.d/ssh restart
+
+#install vncserver and gnome desktop
+sudo apt-get update
+sudo apt install --no-install-recommends ubuntu-desktop
+sudo apt install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal vnc4server
+
+#open up Ubuntu's OS's firewall: 
+sudo iptables -A INPUT -p tcp --dport 5901 -j ACCEPT
+
+#configure user awsgui's vnc settings
+su - awsgui
+vncserver
+vncserver -kill :1
+vim /home/awsgui/.vnc/xstartup
+
+#put this following section into the xstartup file 
+#!/bin/sh
+
+export XKL_XMODMAP_DISABLE=1
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+xsetroot -solid grey
+vncconfig -iconic &
+
+gnome-panel &
+gnome-settings-daemon &
+metacity &
+nautilus &
+gnome-terminal &
+```
 
 ## Questions/issues/contact
 
